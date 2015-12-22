@@ -1,0 +1,37 @@
+{
+  "name": "yurine-radio",
+  "version": "0.0.1",
+  "description": "radio",
+  "maintainers": [
+    {
+      "name": "army8735",
+      "email": "army8735@qq.com"
+    }
+  ],
+  "scripts": {
+    "test": "make test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/migijs/migi.git"
+  },
+  "keywords": [
+    "radio"
+  ],
+  "author": "army8735",
+  "license": "MIT",
+  "devDependencies": {
+    "jsdc": "~0.6.8",
+    "gulp": "~3.9.0",
+    "gulp-rename": "~1.2.2",
+    "gulp-rimraf": "^0.1.1",
+    "gulp-util": "~3.0.1"
+  },
+  "spm": {
+    "main": "./index.js",
+    "output": [
+      "./index.js"
+    ]
+  },
+  "readmeFilename": "README.md"
+}
