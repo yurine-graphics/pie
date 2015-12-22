@@ -93,7 +93,7 @@
           parseInt(inputs[i + 1].value) || 1
         ]);
       }
-      location.href = 'index.htm?' + encodeURIComponent(JSON.stringify(data));
+      location.href = '?' + encodeURIComponent(JSON.stringify(data));
     });
     var add = document.querySelector('#add');
     add.addEventListener('click', function(e) {
