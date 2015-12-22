@@ -9,7 +9,7 @@
 npm install yurine-pie
 ```
 
-[![preview](https://raw.githubusercontent.com/yurine-graphics/pie/master/preview.jpg)](https://github.com/yurine-graphics/pie)
+[![preview](https://raw.githubusercontent.com/yurine-graphics/pie/master/preview.png)](https://github.com/yurine-graphics/pie)
 
 # API
  * Radio(selector:DOM/String, data:\<\<String>, \<int>>, option:Object):Class
