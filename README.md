@@ -9,6 +9,8 @@
 npm install yurine-pie
 ```
 
+[![preview](https://raw.githubusercontent.com/yurine-graphics/pie/master/logo.jpg)](https://github.com/yurine-graphics/pie)
+
 # API
  * Radio(selector:DOM/String, data:\<\<String>, \<int>>, option:Object):Class
    * selector:String 渲染的canvas对象或选择器
