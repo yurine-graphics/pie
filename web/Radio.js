@@ -73,12 +73,12 @@ function getColor(option, i) {
     }
     var radio = (min * size - lineWidth) >> 1;
 
-    this.renderBg(context, min, radio, lineWidth, padding);
-    this.renderFg(context, min, radio, lineWidth, padding);
+    this.renderBg(context, radio, lineWidth, padding);
+    this.renderFg(context, radio, lineWidth, padding);
     this.renderTxt(context, radio, lineWidth, padding, width, height);
   }
-  Radio.prototype.renderBg = function(context, min, radio, lineWidth, padding) {
-    var gr = context.createRadialGradient(padding[3] + radio, min >> 1, radio - (lineWidth >> 1), padding[3] + radio, min >> 1, radio + (lineWidth >> 1));
+  Radio.prototype.renderBg = function(context, radio, lineWidth, padding) {
+    var gr = context.createRadialGradient(padding[3] + radio + (lineWidth >> 1), padding[0] + radio + (lineWidth >> 1), radio - (lineWidth >> 1), padding[3] + radio + (lineWidth >> 1), padding[0] + radio + (lineWidth >> 1), radio + (lineWidth >> 1));
     gr.addColorStop(0, 'rgba(0,0,0,0)');
     gr.addColorStop(0.2, 'rgba(0,0,0,0.1)');
     gr.addColorStop(0.8, 'rgba(0,0,0,0.1)');
@@ -86,11 +86,11 @@ function getColor(option, i) {
     context.beginPath();
     context.strokeStyle = gr;
     context.lineWidth = lineWidth;
-    context.arc(padding[3] + radio, min >> 1, radio, 0, (Math.PI/180)*360);
+    context.arc(padding[3] + radio + (lineWidth >> 1), padding[0] + radio + (lineWidth >> 1), radio, 0, (Math.PI/180)*360);
     context.stroke();
     context.closePath();
   }
-  Radio.prototype.renderFg = function(context, min, radio, lineWidth, padding) {
+  Radio.prototype.renderFg = function(context, radio, lineWidth, padding) {
     var self = this;
     var sum = 0;
     self.data.forEach(function(item) {
@@ -98,11 +98,11 @@ function getColor(option, i) {
     });
     var count = 0;
     self.data.forEach(function(item, i) {
-      self.renderItem(item, i, context, min, radio, lineWidth, padding, count, sum);
+      self.renderItem(item, i, context, radio, lineWidth, padding, count, sum);
       count += parseFloat(item[1]);
     });
   }
-  Radio.prototype.renderItem = function(item, i, context, min, radio, lineWidth, padding, count, sum) {
+  Radio.prototype.renderItem = function(item, i, context, radio, lineWidth, padding, count, sum) {
     var color = getColor(this.option, i);
     context.beginPath();
     context.strokeStyle = color;
@@ -110,7 +110,7 @@ function getColor(option, i) {
     var start = (Math.PI/180)*360*count/sum;
     var num = parseFloat(item[1]);
     var end = start + (Math.PI/180)*360*num/sum;
-    context.arc(padding[3] + radio, min >> 1, radio, start, end);
+    context.arc(padding[3] + radio + (lineWidth >> 1), padding[0] + radio + (lineWidth >> 1), radio, start, end);
     context.stroke();
     context.closePath();
   }
@@ -118,7 +118,6 @@ function getColor(option, i) {
     var lineHeight;var fontSize;var fontWeight;var fontFamily;var fontVariant;var fontStyle;var self = this;
     var font = this.option.font || 'normal normal normal 12px/1.5 Arial';
     !function(){var _1= util.calFont(font);fontStyle=_1["fontStyle"];fontVariant=_1["fontVariant"];fontFamily=_1["fontFamily"];fontWeight=_1["fontWeight"];fontSize=_1["fontSize"];lineHeight=_1["lineHeight"]}();
-
 
     var color = this.option.color || '#000';
     if(color.charAt(0) != '#' && color.charAt(0) != 'r') {
@@ -130,6 +129,8 @@ function getColor(option, i) {
       fontSize = parseInt(this.option.fontSize) || 12;
     }
     fontSize = Math.max(fontSize, 12);
+    fontSize *= 2;
+
     if(this.option.lineHeight) {
       lineHeight = this.option.lineHeight;
       if(util.isString(lineHeight)) {
@@ -149,15 +150,15 @@ function getColor(option, i) {
     font = fontStyle + ' ' + fontVariant + ' ' + fontWeight + ' ' + fontSize + 'px/' + lineHeight + 'px ' + fontFamily;
     context.font = font;
 
-    var discRadio = parseInt(this.option.discRadio) || 5;
+    var discRadio = parseInt(this.option.discRadio) || 10;
     if(discRadio < 2) {
       discRadio = 2;
     }
     else if(discRadio > (fontSize >> 1)) {
       discRadio = fontSize >> 1;
     }
-    var x = padding[3] + (radio << 1) + (lineWidth >> 1);
-    var maxWidth = width - padding[1] - x - (discRadio << 1) - 20;
+    var x = padding[3] + (radio << 1) + lineWidth;
+    var maxWidth = width - padding[1] - x - (discRadio << 1) - 30;
 
     var maxTextWidth = 0;
     var totalHeight = 0;
@@ -180,7 +181,7 @@ function getColor(option, i) {
     x += (maxWidth - maxTextWidth) >> 1;
     var offset = (height - totalHeight) >> 1;
 
-    var count = 0;
+    var count = padding[0];
     self.data.forEach(function(item, i) {
       self.renderTxtItem(item, i, context, x, offset, count, discRadio, color, fontSize, lineHeight, maxWidth);
       count += heights[i];
@@ -199,11 +200,11 @@ function getColor(option, i) {
     var txt = item[0] || i;
     if(Array.isArray(txt)) {
       txt.forEach(function(t, j) {
-        context.fillText(t, x + 20, count + (offset >> 1) + j * lineHeight);
+        context.fillText(t, x + 30, count + (offset >> 1) + j * lineHeight);
       });
     }
     else {
-      context.fillText(txt, x + 20, count + (offset >> 1));
+      context.fillText(txt, x + 30, count + (offset >> 1));
     }
   }
 
