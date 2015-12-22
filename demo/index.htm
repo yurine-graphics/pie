@@ -4,18 +4,109 @@
   <meta charset="UTF-8">
   <title>radio</title>
   <meta name="viewport" content="target-densitydpi=device-dpi,width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=0"/>
+  <style>
+    html,body{
+      font:12px/1.5 Arial;
+    }
+    a{
+      text-decoration:none;
+      color:#F33;
+    }
+    ul{
+      padding:0;
+      list-style-type:none;
+    }
+    ul li{
+      padding:2px 0;
+    }
+    ul input{
+      width:100px;
+    }
+    ul button{
+      display:inline-block;
+      width:50px;
+      height:20px;
+      margin:0;
+      padding:0;
+      background:#FFF;
+      border:1px solid #EEE;
+    }
+    form>button,#sub{
+      display:inline-block;
+      padding:0;
+      width:100px;
+      height:30px;
+      background:#FED;
+      font-size:14px;
+      border:1px solid #CBA;
+      border-radius:3px;
+    }
+  </style>
 </head>
 <body>
-<canvas id="canvas" width="400" height="400"></canvas>
+<canvas id="canvas" width="400" height="200"></canvas>
+<form>
+  <ul>
+  </ul>
+  <input type="submit" id="sub"/>
+  <button id="add">添加</button>
+</form>
 <script src="sea.js"></script>
 <script>
   seajs.use('../init', function(Radio) {
-    new Radio('#canvas', [
-      ['a', 72],
-      ['b', 53],
-      ['c', 26],
-      ['d', 39]
-    ], {
+    var search = location.search || '';
+    search = search.replace(/^\?/, '');
+    var data = [];
+    if(search) {
+      data = JSON.parse(decodeURIComponent(search));
+    }
+    if(!data.length) {
+      data = [
+        ['默认a', 72],
+        ['默认b', 53],
+        ['默认c', 26],
+        ['默认d', 39]
+      ];
+    }
+    var s = '';
+    data.forEach(function(item) {
+      if(!item[0] || !item[1]) {
+        return;
+      }
+      s += '<li>\
+        <input type="text" value="' + item[0] + '" placeholder="名称"/>\
+        <input type="number" value="' + item[1] + '" placeholder="数字"/>\
+        <button>删除</button>\
+        </li>';
+    });
+    var ul = document.querySelector('ul');
+    ul.innerHTML = s;
+
+    var form = document.querySelector('form');
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      data = [];
+      var inputs = form.querySelectorAll('input');
+      for(var i = 0, len = inputs.length; i < len - 1; i += 2) {
+        data.push([
+          inputs[i].value,
+          parseInt(inputs[i + 1].value) || 1
+        ]);
+      }
+      location.href = 'index.htm?' + encodeURIComponent(JSON.stringify(data));
+    });
+    var add = document.querySelector('#add');
+    add.addEventListener('click', function(e) {
+      e.preventDefault();
+      ul.innerHTML += '<li>\
+        <input type="text" value="" placeholder="名称"/>\
+        <input type="number" value="" placeholder="数字"/>\
+        <button>删除</button>\
+        </li>';
+    });
+    new Radio('#canvas', data, {
+      height: 200,
+      fontSize: 14
     });
   });
 </script>
