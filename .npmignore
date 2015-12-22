@@ -10,7 +10,7 @@ node_modules/
 gulpfile.js
 reports/
 lib/
-dist/migi
+dist/
 temp.html
 .log
 logo.jpg
