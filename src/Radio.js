@@ -25,8 +25,8 @@ class Radio {
 
   render() {
     var context = this.dom.getContext('2d');
-    var width = this.option.width || 400;
-    var height = this.option.height || 400;
+    var width = this.option.width || 300;
+    var height = this.option.height || 150;
     var padding = this.option.padding || [10, 10, 10, 10];
     if(Array.isArray(padding)) {
       switch(padding.length) {
