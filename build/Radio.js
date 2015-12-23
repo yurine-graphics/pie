@@ -129,7 +129,6 @@ function getColor(option, i) {
       fontSize = parseInt(this.option.fontSize) || 12;
     }
     fontSize = Math.max(fontSize, 12);
-    fontSize *= 2;
 
     if(this.option.lineHeight) {
       lineHeight = this.option.lineHeight;
@@ -145,8 +144,10 @@ function getColor(option, i) {
         lineHeight *= fontSize;
       }
     }
-    lineHeight *= 2;
-    lineHeight = Math.max(lineHeight, fontSize);
+    else {
+      lineHeight = fontSize * 1.5;
+    }
+    lineHeight = Math.max(lineHeight, fontSize);console.log(lineHeight)
 
     font = fontStyle + ' ' + fontVariant + ' ' + fontWeight + ' ' + fontSize + 'px/' + lineHeight + 'px ' + fontFamily;
     context.font = font;
