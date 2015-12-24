@@ -29,7 +29,10 @@ npm install yurine-pie
      - lineWidth:int 圆框粗细，单位px，最大不超过可视半径，最小不低于1px
      - size:float 饼图占可视比例，最大不超过1，最小不低于0.2
      - colors:\<String> 自定义颜色数组
-     - discRadio:\<int> 枚举圆点半径，最大不超过lneHeight的一半，最小不低于1px
+     - discRadio:\<int> 枚举圆点半径，最大不超过lineHeight的一半，最小不低于1px
+     - xNum:int 横坐标个数
+     - yNum:int 纵坐标个数
+     - gridWidth:int 背景网格线粗细，单位px，最大不超过可视半径，最小不低于1px
 
 # License
 [MIT License]
