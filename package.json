@@ -1,6 +1,6 @@
 {
   "name": "yurine-pie",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "饼图",
   "maintainers": [
     {
@@ -13,10 +13,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/migijs/migi.git"
+    "url": "git://github.com/yurine-pie/pie.git"
   },
   "keywords": [
-    "radio"
+    "pie"
   ],
   "author": "army8735",
   "license": "MIT",

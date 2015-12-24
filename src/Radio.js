@@ -52,12 +52,8 @@ class Radio {
     var paddingY = padding[0] + padding[2];
     var min = Math.min(width - paddingX, height - paddingY);
     var lineWidth = this.option.lineWidth || 20;
-    if(lineWidth < 4) {
-      lineWidth = 4;
-    }
-    else if(lineWidth > min >> 1) {
-      lineWidth = min >> 1;
-    }
+    lineWidth = Math.max(lineWidth, 1);
+    lineWidth = Math.min(lineWidth, min >> 1);
     var size = String(this.option.size || 1);
     if(/%$/.test(size)) {
       size = parseFloat(size) * 0.01;
@@ -65,12 +61,8 @@ class Radio {
     else {
       size = parseFloat(size);
     }
-    if(size > 1) {
-      size = 1;
-    }
-    else if(size < 0.2) {
-      size = 0.2;
-    }
+    size = Math.min(size, 1);
+    size = Math.max(size, 0.2);
     var radio = (min * size - lineWidth) >> 1;
 
     this.renderBg(context, radio, lineWidth, padding);
@@ -147,18 +139,14 @@ class Radio {
     else {
       lineHeight = fontSize * 1.5;
     }
-    lineHeight = Math.max(lineHeight, fontSize);console.log(lineHeight)
+    lineHeight = Math.max(lineHeight, fontSize);
 
     font = fontStyle + ' ' + fontVariant + ' ' + fontWeight + ' ' + fontSize + 'px/' + lineHeight + 'px ' + fontFamily;
     context.font = font;
 
-    var discRadio = parseInt(this.option.discRadio) || 10;
-    if(discRadio < 2) {
-      discRadio = 2;
-    }
-    else if(discRadio > (fontSize >> 1)) {
-      discRadio = fontSize >> 1;
-    }
+    var discRadio = parseInt(this.option.discRadio) || 1;
+    discRadio = Math.max(discRadio, 1);
+    discRadio = Math.min(discRadio, lineHeight >> 1);
     var x = padding[3] + (radio << 1) + lineWidth;
     var maxWidth = width - padding[1] - x - (discRadio << 1) - 30;
 
