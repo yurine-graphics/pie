@@ -109,7 +109,7 @@ function getColor(option, i) {
   Radio.prototype.renderTxt = function(context, radio, lineWidth, padding, width, height) {
     var lineHeight;var fontSize;var fontWeight;var fontFamily;var fontVariant;var fontStyle;var self = this;
     var font = this.option.font || 'normal normal normal 12px/1.5 Arial';
-    !function(){var _1= util.calFont(font);fontStyle=_1["fontStyle"];fontVariant=_1["fontVariant"];fontFamily=_1["fontFamily"];fontWeight=_1["fontWeight"];fontSize=_1["fontSize"];lineHeight=_1["lineHeight"]}();
+    (function(){var _1= util.calFont(font);fontStyle=_1["fontStyle"];fontVariant=_1["fontVariant"];fontFamily=_1["fontFamily"];fontWeight=_1["fontWeight"];fontSize=_1["fontSize"];lineHeight=_1["lineHeight"]}).call(this);
 
     var color = this.option.color || '#000';
     if(color.charAt(0) != '#' && color.charAt(0) != 'r') {
@@ -198,6 +198,10 @@ function getColor(option, i) {
     }
   }
 
+  var _2={};_2.COLORS={};_2.COLORS.get =function() {
+    return colors;
+  }
+Object.keys(_2).forEach(function(k){Object.defineProperty(Radio,k,_2[k])});
 
 exports["default"]=Radio;
 });

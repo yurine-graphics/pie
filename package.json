@@ -21,7 +21,7 @@
   "author": "army8735",
   "license": "MIT",
   "devDependencies": {
-    "jsdc": "~0.6.8",
+    "jsdc": "~0.6.9",
     "gulp": "~3.9.0",
     "gulp-rename": "~1.2.2",
     "gulp-rimraf": "^0.1.1",

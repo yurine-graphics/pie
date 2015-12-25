@@ -197,6 +197,10 @@ class Radio {
       context.fillText(txt, x + 30, count + (offset >> 1));
     }
   }
+
+  static get COLORS() {
+    return colors;
+  }
 }
 
 export default Radio;
