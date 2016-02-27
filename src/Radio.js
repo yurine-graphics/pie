@@ -63,10 +63,13 @@ class Radio {
     }
     size = Math.min(size, 1);
     size = Math.max(size, 0.2);
-    var radio = (min * size - lineWidth) >> 1;
+    var radio = (min * size - lineWidth * 2) >> 1;
 
     this.renderBg(context, radio, lineWidth, padding);
     this.renderFg(context, radio, lineWidth, padding);
+    if(this.option.noLabel) {
+      return;
+    }
     this.renderTxt(context, radio, lineWidth, padding, width, height);
   }
   renderBg(context, radio, lineWidth, padding) {
@@ -93,6 +96,28 @@ class Radio {
       self.renderItem(item, i, context, radio, lineWidth, padding, count, sum);
       count += parseFloat(item[1]);
     });
+    var title = this.option.title;
+    if(title) {
+      var font = this.option.font || 'normal normal normal 12px/1.5 Arial';
+      var { fontStyle, fontVariant, fontFamily, fontWeight, fontSize, lineHeight } = util.calFont(font);
+
+      var color = this.option.titleColor || '#000';
+      if(color.charAt(0) != '#' && color.charAt(0) != 'r') {
+        color = '#' + color;
+      }
+      context.fillStyle = color;
+      context.textBaseline = 'top';
+
+      if(this.option.titleSize) {
+        fontSize = parseInt(this.option.titleSize) || 12;
+      }
+
+      font = fontStyle + ' ' + fontVariant + ' ' + fontWeight + ' ' + fontSize + 'px/' + lineHeight + 'px ' + fontFamily;
+      context.font = font;
+
+      var w = context.measureText(title).width;
+      context.fillText(title, radio + padding[3] - ((w - lineWidth) >> 1), radio + padding[0] - ((fontSize - lineWidth) >> 1));
+    }
   }
   renderItem(item, i, context, radio, lineWidth, padding, count, sum) {
     var color = getColor(this.option, i);
@@ -120,7 +145,6 @@ class Radio {
     if(this.option.fontSize) {
       fontSize = parseInt(this.option.fontSize) || 12;
     }
-    fontSize = Math.max(fontSize, 12);
 
     if(this.option.lineHeight) {
       lineHeight = this.option.lineHeight;
@@ -147,8 +171,9 @@ class Radio {
     var discRadio = parseInt(this.option.discRadio) || 1;
     discRadio = Math.max(discRadio, 1);
     discRadio = Math.min(discRadio, lineHeight >> 1);
-    var x = padding[3] + (radio << 1) + lineWidth;
+    var x = padding[3] + (radio << 1) + (lineWidth << 1);
     var maxWidth = width - padding[1] - x - (discRadio << 1) - 30;
+    maxWidth = Math.max(0, maxWidth);
 
     var maxTextWidth = 0;
     var totalHeight = 0;
@@ -157,7 +182,7 @@ class Radio {
       item[0] = item[0] || '';
       var w = context.measureText(item[0]).width;
       if(w > maxWidth) {
-        var arr = util.calHeight(context, item[0], maxWidth);
+        var arr = util.calHeight(context, item[0], maxWidth, w);
         item[0] = arr;
         totalHeight += heights.push(arr.length * lineHeight);
         maxTextWidth = maxWidth;

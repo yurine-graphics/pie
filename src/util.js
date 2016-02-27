@@ -33,15 +33,17 @@ function find(context, s, maxWidth, i1, i2, w) {
 
 export default {
   isString: isType('String'),
-  calHeight: function(context, s, maxWidth) {
+  calHeight: function(context, s, maxWidth, w) {
     var arr = [];
     var len = s.length;
-    var i = find(context, s, maxWidth, 0, len);
+    var i = find(context, s, maxWidth, 0, len, w);
+    i = Math.max(1, i);
     arr.push(s.slice(0, i));
     while(i < len - 1) {
       s = s.slice(i);
       len = s.length;
       i = find(context, s, maxWidth, 0, len);
+      i = Math.max(1, i);
       arr.push(s.slice(0, i));
     }
     return arr;

@@ -12,7 +12,7 @@ npm install yurine-pie
 [![preview](https://raw.githubusercontent.com/yurine-graphics/pie/master/preview.png)](https://github.com/yurine-graphics/pie)
 
 # API
- * Radio(selector:DOM/String, data:\<\<String>, \<int>>, option:Object):Class
+ * Radio(selector:DOM/String, data:Array\<\<String>, \<int>>, option:Object):Class
    * selector:String 渲染的canvas对象或选择器
    * data:\<\<String>, \<int>> 渲染数据数组，以\[名称, 数字]格式
    * option:Object 选项
@@ -23,6 +23,7 @@ npm install yurine-pie
      - fontStyle:String 文字样式，会覆盖font
      - fontSize:int 文字大小，单位px，会覆盖font
      - lineHeight:String/int 行高，单位px，会覆盖font
+     - color:String 文字颜色
      - padding:int/Array 边距，上右下左，单位px
      - width:int 宽度，单位px
      - height:int 高度，单位px
@@ -30,6 +31,10 @@ npm install yurine-pie
      - size:float 饼图占可视比例，∈\[0.2, 1]
      - colors:\<String> 自定义颜色数组
      - discRadio:\<int> 枚举圆点半径，单位px，∈\[1, lineHeight/2]
+     - noLabel:Boolean 是否显示标签说明
+     - title:String 圆中的文字
+     - titleColor:String 圆中的文字颜色
+     - titleSize:int 圆中的文字大小
 
 # License
 [MIT License]
