@@ -65,15 +65,17 @@ class Radio {
     size = Math.max(size, 0.2);
     var radio = (min * size - lineWidth * 2) >> 1;
 
-    this.renderBg(context, radio, lineWidth, padding);
-    this.renderFg(context, radio, lineWidth, padding);
+    var [x, y] = this.renderBg(context, radio, lineWidth, padding, width);
+    this.renderFg(context, radio, lineWidth, padding, x, y);
     if(this.option.noLabel) {
       return;
     }
     this.renderTxt(context, radio, lineWidth, padding, width, height);
   }
-  renderBg(context, radio, lineWidth, padding) {
-    var gr = context.createRadialGradient(padding[3] + radio + (lineWidth >> 1), padding[0] + radio + (lineWidth >> 1), radio - (lineWidth >> 1), padding[3] + radio + (lineWidth >> 1), padding[0] + radio + (lineWidth >> 1), radio + (lineWidth >> 1));
+  renderBg(context, radio, lineWidth, padding, width) {
+    var x = this.option.noLabel ? (width >> 1) : padding[3] + radio + (lineWidth >> 1);
+    var y = padding[0] + radio + (lineWidth >> 1);console.log(x)
+    var gr = context.createRadialGradient(x, y, radio - (lineWidth >> 1), x, y, radio + (lineWidth >> 1));
     gr.addColorStop(0, 'rgba(0,0,0,0)');
     gr.addColorStop(0.2, 'rgba(0,0,0,0.1)');
     gr.addColorStop(0.8, 'rgba(0,0,0,0.1)');
@@ -81,11 +83,12 @@ class Radio {
     context.beginPath();
     context.strokeStyle = gr;
     context.lineWidth = lineWidth;
-    context.arc(padding[3] + radio + (lineWidth >> 1), padding[0] + radio + (lineWidth >> 1), radio, 0, (Math.PI/180)*360);
+    context.arc(x, y, radio, 0, (Math.PI/180)*360);
     context.stroke();
     context.closePath();
+    return [x, y];
   }
-  renderFg(context, radio, lineWidth, padding) {
+  renderFg(context, radio, lineWidth, padding, x, y) {
     var self = this;
     var sum = 0;
     self.data.forEach(function(item) {
@@ -93,7 +96,7 @@ class Radio {
     });
     var count = 0;
     self.data.forEach(function(item, i) {
-      self.renderItem(item, i, context, radio, lineWidth, padding, count, sum);
+      self.renderItem(item, i, context, radio, lineWidth, padding, count, sum, x, y);
       count += parseFloat(item[1]);
     });
     var title = this.option.title;
@@ -116,10 +119,10 @@ class Radio {
       context.font = font;
 
       var w = context.measureText(title).width;
-      context.fillText(title, radio + padding[3] - ((w - lineWidth) >> 1), radio + padding[0] - ((fontSize - lineWidth) >> 1));
+      context.fillText(title, x - (w >> 1), radio + padding[0] - ((fontSize - lineWidth) >> 1));
     }
   }
-  renderItem(item, i, context, radio, lineWidth, padding, count, sum) {
+  renderItem(item, i, context, radio, lineWidth, padding, count, sum, x, y) {
     var color = getColor(this.option, i);
     context.beginPath();
     context.strokeStyle = color;
@@ -127,7 +130,7 @@ class Radio {
     var start = (Math.PI/180)*360*count/sum;
     var num = parseFloat(item[1]);
     var end = start + (Math.PI/180)*360*num/sum;
-    context.arc(padding[3] + radio + (lineWidth >> 1), padding[0] + radio + (lineWidth >> 1), radio, start, end);
+    context.arc(x, y, radio, start, end);
     context.stroke();
     context.closePath();
   }

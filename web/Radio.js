@@ -24,7 +24,7 @@ function getColor(option, i) {
   }
 
   Radio.prototype.render = function() {
-    var context = this.dom.getContext('2d');
+    var y;var x;var context = this.dom.getContext('2d');
     var width = this.option.width || 300;
     var height = this.option.height || 150;
     var padding = this.option.padding || [10, 10, 10, 10];
@@ -65,15 +65,17 @@ function getColor(option, i) {
     size = Math.max(size, 0.2);
     var radio = (min * size - lineWidth * 2) >> 1;
 
-    this.renderBg(context, radio, lineWidth, padding);
-    this.renderFg(context, radio, lineWidth, padding);
+    (function(){var _1= this.renderBg(context, radio, lineWidth, padding, width);x=_1[0];y=_1[1]}).call(this);
+    this.renderFg(context, radio, lineWidth, padding, x, y);
     if(this.option.noLabel) {
       return;
     }
     this.renderTxt(context, radio, lineWidth, padding, width, height);
   }
-  Radio.prototype.renderBg = function(context, radio, lineWidth, padding) {
-    var gr = context.createRadialGradient(padding[3] + radio + (lineWidth >> 1), padding[0] + radio + (lineWidth >> 1), radio - (lineWidth >> 1), padding[3] + radio + (lineWidth >> 1), padding[0] + radio + (lineWidth >> 1), radio + (lineWidth >> 1));
+  Radio.prototype.renderBg = function(context, radio, lineWidth, padding, width) {
+    var x = this.option.noLabel ? (width >> 1) : padding[3] + radio + (lineWidth >> 1);
+    var y = padding[0] + radio + (lineWidth >> 1);console.log(x)
+    var gr = context.createRadialGradient(x, y, radio - (lineWidth >> 1), x, y, radio + (lineWidth >> 1));
     gr.addColorStop(0, 'rgba(0,0,0,0)');
     gr.addColorStop(0.2, 'rgba(0,0,0,0.1)');
     gr.addColorStop(0.8, 'rgba(0,0,0,0.1)');
@@ -81,11 +83,12 @@ function getColor(option, i) {
     context.beginPath();
     context.strokeStyle = gr;
     context.lineWidth = lineWidth;
-    context.arc(padding[3] + radio + (lineWidth >> 1), padding[0] + radio + (lineWidth >> 1), radio, 0, (Math.PI/180)*360);
+    context.arc(x, y, radio, 0, (Math.PI/180)*360);
     context.stroke();
     context.closePath();
+    return [x, y];
   }
-  Radio.prototype.renderFg = function(context, radio, lineWidth, padding) {
+  Radio.prototype.renderFg = function(context, radio, lineWidth, padding, x, y) {
     var lineHeight;var fontSize;var fontWeight;var fontFamily;var fontVariant;var fontStyle;var self = this;
     var sum = 0;
     self.data.forEach(function(item) {
@@ -93,13 +96,13 @@ function getColor(option, i) {
     });
     var count = 0;
     self.data.forEach(function(item, i) {
-      self.renderItem(item, i, context, radio, lineWidth, padding, count, sum);
+      self.renderItem(item, i, context, radio, lineWidth, padding, count, sum, x, y);
       count += parseFloat(item[1]);
     });
     var title = this.option.title;
     if(title) {
       var font = this.option.font || 'normal normal normal 12px/1.5 Arial';
-      (function(){var _1= util.calFont(font);fontStyle=_1["fontStyle"];fontVariant=_1["fontVariant"];fontFamily=_1["fontFamily"];fontWeight=_1["fontWeight"];fontSize=_1["fontSize"];lineHeight=_1["lineHeight"]}).call(this);
+      (function(){var _2= util.calFont(font);fontStyle=_2["fontStyle"];fontVariant=_2["fontVariant"];fontFamily=_2["fontFamily"];fontWeight=_2["fontWeight"];fontSize=_2["fontSize"];lineHeight=_2["lineHeight"]}).call(this);
 
       var color = this.option.titleColor || '#000';
       if(color.charAt(0) != '#' && color.charAt(0) != 'r') {
@@ -116,10 +119,10 @@ function getColor(option, i) {
       context.font = font;
 
       var w = context.measureText(title).width;
-      context.fillText(title, radio + padding[3] - ((w - lineWidth) >> 1), radio + padding[0] - ((fontSize - lineWidth) >> 1));
+      context.fillText(title, x - (w >> 1), radio + padding[0] - ((fontSize - lineWidth) >> 1));
     }
   }
-  Radio.prototype.renderItem = function(item, i, context, radio, lineWidth, padding, count, sum) {
+  Radio.prototype.renderItem = function(item, i, context, radio, lineWidth, padding, count, sum, x, y) {
     var color = getColor(this.option, i);
     context.beginPath();
     context.strokeStyle = color;
@@ -127,14 +130,14 @@ function getColor(option, i) {
     var start = (Math.PI/180)*360*count/sum;
     var num = parseFloat(item[1]);
     var end = start + (Math.PI/180)*360*num/sum;
-    context.arc(padding[3] + radio + (lineWidth >> 1), padding[0] + radio + (lineWidth >> 1), radio, start, end);
+    context.arc(x, y, radio, start, end);
     context.stroke();
     context.closePath();
   }
   Radio.prototype.renderTxt = function(context, radio, lineWidth, padding, width, height) {
     var lineHeight;var fontSize;var fontWeight;var fontFamily;var fontVariant;var fontStyle;var self = this;
     var font = this.option.font || 'normal normal normal 12px/1.5 Arial';
-    (function(){var _2= util.calFont(font);fontStyle=_2["fontStyle"];fontVariant=_2["fontVariant"];fontFamily=_2["fontFamily"];fontWeight=_2["fontWeight"];fontSize=_2["fontSize"];lineHeight=_2["lineHeight"]}).call(this);
+    (function(){var _3= util.calFont(font);fontStyle=_3["fontStyle"];fontVariant=_3["fontVariant"];fontFamily=_3["fontFamily"];fontWeight=_3["fontWeight"];fontSize=_3["fontSize"];lineHeight=_3["lineHeight"]}).call(this);
 
     var color = this.option.color || '#000';
     if(color.charAt(0) != '#' && color.charAt(0) != 'r') {
@@ -223,10 +226,10 @@ function getColor(option, i) {
     }
   }
 
-  var _3={};_3.COLORS={};_3.COLORS.get =function() {
+  var _4={};_4.COLORS={};_4.COLORS.get =function() {
     return colors;
   }
-Object.keys(_3).forEach(function(k){Object.defineProperty(Radio,k,_3[k])});
+Object.keys(_4).forEach(function(k){Object.defineProperty(Radio,k,_4[k])});
 
 exports["default"]=Radio;
 });
