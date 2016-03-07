@@ -63,7 +63,7 @@ class Radio {
     }
     size = Math.min(size, 1);
     size = Math.max(size, 0.2);
-    var radio = (min * size - lineWidth * 2) >> 1;
+    var radio = (min * size - lineWidth) >> 1;
 
     var [x, y] = this.renderBg(context, radio, lineWidth, padding, width);
     this.renderFg(context, radio, lineWidth, padding, x, y);
@@ -73,8 +73,8 @@ class Radio {
     this.renderTxt(context, radio, lineWidth, padding, width, height);
   }
   renderBg(context, radio, lineWidth, padding, width) {
-    var x = this.option.noLabel ? (width >> 1) : padding[3] + radio + (lineWidth >> 1);
-    var y = padding[0] + radio + (lineWidth >> 1);console.log(x)
+    var x = this.option.noLabel ? ((width - padding[1] - padding[3]) >> 1) : padding[3] + radio + (lineWidth >> 1);
+    var y = padding[0] + radio + (lineWidth >> 1);
     var gr = context.createRadialGradient(x, y, radio - (lineWidth >> 1), x, y, radio + (lineWidth >> 1));
     gr.addColorStop(0, 'rgba(0,0,0,0)');
     gr.addColorStop(0.2, 'rgba(0,0,0,0.1)');
