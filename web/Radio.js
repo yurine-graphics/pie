@@ -27,7 +27,7 @@ function getColor(option, i) {
     var y;var x;var context = this.dom.getContext('2d');
     var width = this.option.width || 300;
     var height = this.option.height || 150;
-    var padding = this.option.padding || [10, 10, 10, 10];
+    var padding = this.option.padding === undefined ? [10, 10, 10, 10] : this.option.padding;
     if(Array.isArray(padding)) {
       switch(padding.length) {
         case 0:
@@ -54,6 +54,13 @@ function getColor(option, i) {
     var lineWidth = this.option.lineWidth || 20;
     lineWidth = Math.max(lineWidth, 1);
     lineWidth = Math.min(lineWidth, min >> 1);
+    var shadowWidth = this.option.shadowWidth || lineWidth;
+    shadowWidth = Math.max(lineWidth, shadowWidth);
+    shadowWidth = Math.min(shadowWidth, min >> 1);
+    if(shadowWidth > lineWidth && shadowWidth == min >> 1) {
+      var diff = shadowWidth - lineWidth;
+      lineWidth -= diff / 2;
+    }
     var size = String(this.option.size || 1);
     if(/%$/.test(size)) {
       size = parseFloat(size) * 0.01;
@@ -63,29 +70,35 @@ function getColor(option, i) {
     }
     size = Math.min(size, 1);
     size = Math.max(size, 0.2);
-    var radio = (min * size - lineWidth) >> 1;
+    var radio = (min * size - shadowWidth) >> 1;
 
-    (function(){var _1= this.renderBg(context, radio, lineWidth, padding, width);x=_1[0];y=_1[1]}).call(this);
+    (function(){var _1= this.renderBg(context, radio, lineWidth, padding, width, shadowWidth);x=_1[0];y=_1[1]}).call(this);
     this.renderFg(context, radio, lineWidth, padding, x, y);
     if(this.option.noLabel) {
       return;
     }
     this.renderTxt(context, radio, lineWidth, padding, width, height);
   }
-  Radio.prototype.renderBg = function(context, radio, lineWidth, padding, width) {
-    var x = this.option.noLabel ? ((width - padding[1] - padding[3]) >> 1) : padding[3] + radio + (lineWidth >> 1);
-    var y = padding[0] + radio + (lineWidth >> 1);
-    var gr = context.createRadialGradient(x, y, radio - (lineWidth >> 1), x, y, radio + (lineWidth >> 1));
-    gr.addColorStop(0, 'rgba(0,0,0,0)');
-    gr.addColorStop(0.2, 'rgba(0,0,0,0.1)');
-    gr.addColorStop(0.8, 'rgba(0,0,0,0.1)');
-    gr.addColorStop(1, 'rgba(0,0,0,0)');
-    context.beginPath();
-    context.strokeStyle = gr;
-    context.lineWidth = lineWidth;
-    context.arc(x, y, radio, 0, (Math.PI/180)*360);
-    context.stroke();
-    context.closePath();
+  Radio.prototype.renderBg = function(context, radio, lineWidth, padding, width, shadowWidth) {
+    var x = this.option.noLabel ? ((width - padding[1] - padding[3]) >> 1) : padding[3] + radio + (shadowWidth >> 1);
+    var y = padding[0] + radio + (shadowWidth >> 1);
+    var shadowColor = this.option.shadowColor || 'rgba(0,0,0,0.1)';
+    if(shadowWidth && shadowWidth > lineWidth) {
+      context.beginPath();
+      context.strokeStyle = shadowColor;
+      context.lineWidth = shadowWidth;
+      context.arc(x, y, radio, 0, (Math.PI / 180) * 360);
+      context.stroke();
+      context.closePath();
+    }
+    else {
+      context.beginPath();
+      context.strokeStyle = shadowColor;
+      context.lineWidth = lineWidth;
+      context.arc(x, y, radio, 0, (Math.PI / 180) * 360);
+      context.stroke();
+      context.closePath();
+    }
     return [x, y];
   }
   Radio.prototype.renderFg = function(context, radio, lineWidth, padding, x, y) {
@@ -96,7 +109,7 @@ function getColor(option, i) {
     });
     var count = 0;
     self.data.forEach(function(item, i) {
-      self.renderItem(item, i, context, radio, lineWidth, padding, count, sum, x, y);
+      self.renderItem(item, i, context, radio, lineWidth, count, sum, x, y);
       count += parseFloat(item[1]);
     });
     var title = this.option.title;
@@ -122,11 +135,11 @@ function getColor(option, i) {
       context.fillText(title, x - (w >> 1), radio + padding[0] - ((fontSize - lineWidth) >> 1));
     }
   }
-  Radio.prototype.renderItem = function(item, i, context, radio, lineWidth, padding, count, sum, x, y) {
+  Radio.prototype.renderItem = function(item, i, context, radio, lineWidth, count, sum, x, y) {
     var color = getColor(this.option, i);
     context.beginPath();
     context.strokeStyle = color;
-    context.lineWidth = lineWidth >> 1;
+    context.lineWidth = lineWidth;
     var start = (Math.PI/180)*360*count/sum;
     var num = parseFloat(item[1]);
     var end = start + (Math.PI/180)*360*num/sum;

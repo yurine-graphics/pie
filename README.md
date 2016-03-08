@@ -35,6 +35,8 @@ npm install yurine-pie
      - title:String 圆中的文字
      - titleColor:String 圆中的文字颜色
      - titleSize:int 圆中的文字大小
+     - shadowWidth:int 背景色宽，单位px，默认lineWidth，∈\[lineWidth, 可视半径]
+     - shadowColor:String 背景色
 
 # License
 [MIT License]

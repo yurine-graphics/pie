@@ -51,7 +51,6 @@ exports["default"]={
   calFont: function(s) {
     var fontStyle = 'normal';
     var fontVariant = 'normal';
-    var fontFamily = 'Arial';
     var fontWeight = 'normal';
     var fontSize = 12;
     var lineHeight = '1.5';
@@ -82,7 +81,7 @@ exports["default"]={
         lineHeight *= fontSize;
       }
     }
-    fontFamily = s;
+    var fontFamily = s;
     return {
       fontStyle:fontStyle,
       fontVariant:fontVariant,
@@ -91,5 +90,37 @@ exports["default"]={
       fontSize:fontSize,
       lineHeight:lineHeight
     };
+  },
+  rgb2int:function(s) {
+    var r;
+    var g;
+    var b;
+    if(s.charAt(0) == 'r') {
+      var arr = [].slice.call(s.match(/[\d\.]+/g));
+      var opacity = parseFloat(arr[3]) || 1;
+      r = parseInt(arr[0]);
+      g = parseInt(arr[1]);
+      b = parseInt(arr[2]);
+      r = Math.min(255, r + (255 - r) * (1 - opacity));
+      g = Math.min(255, g + (255 - g) * (1 - opacity));
+      b = Math.min(255, b + (255 - b) * (1 - opacity));
+      r = Math.floor(r);
+      g = Math.floor(g);
+      b = Math.floor(b);
+    }
+    else {
+      s = s.replace('#', '');
+      if(s.length == 3) {
+        r = parseInt(s.charAt(0) + s.charAt(0), 16);
+        g = parseInt(s.charAt(1) + s.charAt(1), 16);
+        b = parseInt(s.charAt(2) + s.charAt(2), 16);
+      }
+      else {
+        r = parseInt(s.slice(0, 2), 16);
+        g = parseInt(s.slice(2, 4), 16);
+        b = parseInt(s.slice(4, 6), 16);
+      }
+    }
+    return [r, g, b];
   }
 };
