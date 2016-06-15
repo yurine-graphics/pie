@@ -23,6 +23,7 @@ class Radio {
     this.data = data || [];
     this.option = option || {};
     this.option.colors = this.option.colors || [];
+    this.points = [];
     this.render();
   }
 
@@ -112,7 +113,7 @@ class Radio {
     });
     var count = 0;
     self.data.forEach(function(item, i) {
-      self.renderItem(item, i, context, radio, lineWidth, count, sum, x, y);
+      self.renderItem.call(self, item, i, context, radio, lineWidth, count, sum, x, y);
       count += parseFloat(item[1]);
     });
     var title = this.option.title;
@@ -143,6 +144,8 @@ class Radio {
     var start = (Math.PI/180)*360*count/sum;
     var num = parseFloat(item[1]);
     var end = start + (Math.PI/180)*360*num/sum;
+    var startDeg = 360*count/sum;
+    var endDeg = 360*num/sum + startDeg;
     if(Array.isArray(color)) {
       var count = 0;
       color.forEach(function(item) {
@@ -170,6 +173,28 @@ class Radio {
       context.arc(x, y, radio, start, end);
       context.stroke();
       context.closePath();
+    }
+    
+    var deg = startDeg + (endDeg - startDeg) * 0.5;
+    if(deg > 270) {
+      var xx = x + Math.sin((deg - 270) * Math.PI / 180) * radio;
+      var yy = y - Math.cos((deg - 270) * Math.PI / 180) * radio;
+      this.points.unshift([xx, yy]);
+    }
+    else if(deg > 180) {
+      var xx = x - Math.cos((deg - 180) * Math.PI / 180) * radio;
+      var yy = y - Math.sin((deg - 180) * Math.PI / 180) * radio;
+      this.points.unshift([xx, yy]);
+    }
+    else if(deg > 90) {
+      var xx = x - Math.sin((deg - 90) * Math.PI / 180) * radio;
+      var yy = y + Math.cos((deg - 90) * Math.PI / 180) * radio;
+      this.points.unshift([xx, yy]);
+    }
+    else {
+      var xx = x + Math.cos((deg) * Math.PI / 180) * radio;
+      var yy = y + Math.sin((deg) * Math.PI / 180) * radio;
+      this.points.unshift([xx, yy]);
     }
   }
   renderTxt(context, radio, lineWidth, padding, width, height) {

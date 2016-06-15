@@ -119,7 +119,7 @@
         <button>删除</button>\
         </li>';
     });
-    new Radio('#canvas', data, {
+    var r = new Radio('#canvas', data, {
       width: 600,
       height: 300,
       fontSize: 24,
@@ -130,6 +130,7 @@
         ['0.2 #EE8342', '0.6 #F68B49', '0.2 #FBC9A9']
       ]
     });
+    console.log(r.points);
   });
 </script>
 </body>

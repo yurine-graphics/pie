@@ -37,6 +37,7 @@ npm install yurine-pie
      - titleSize:int 圆中的文字大小
      - shadowWidth:int 背景色宽，单位px，默认lineWidth，∈\[lineWidth, 可视半径]
      - shadowColor:String 背景色
+     - points:\<Array\<Number, Number>> 每个饼图的中心坐标
 
 # License
 [MIT License]
