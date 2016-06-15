@@ -75,17 +75,21 @@ class Radio {
     size = Math.min(size, 1);
     size = Math.max(size, 0.2);
     var radio = (min * size - shadowWidth) >> 1;
+    var sizeOffset = 0;
+    if(size < 1) {
+      sizeOffset = (height - paddingY) * size * 0.5;
+    }
 
-    var [x, y] = this.renderBg(context, radio, lineWidth, padding, width, shadowWidth);
-    this.renderFg(context, radio, lineWidth, padding, x, y);
+    var [x, y] = this.renderBg(context, radio, lineWidth, padding, width, shadowWidth, sizeOffset);
+    this.renderFg(context, radio, lineWidth, padding, x, y, sizeOffset);
     if(this.option.noLabel) {
       return;
     }
     this.renderTxt(context, radio, lineWidth, padding, width, height);
   }
-  renderBg(context, radio, lineWidth, padding, width, shadowWidth) {
+  renderBg(context, radio, lineWidth, padding, width, shadowWidth, sizeOffset) {
     var x = this.option.noLabel ? ((width - padding[1] - padding[3]) >> 1) : padding[3] + radio + (shadowWidth >> 1);
-    var y = padding[0] + radio + (shadowWidth >> 1);
+    var y = padding[0] + radio + (shadowWidth >> 1) + sizeOffset;
     var shadowColor = this.option.shadowColor || 'rgba(0,0,0,0.1)';
     if(shadowWidth && shadowWidth > lineWidth) {
       context.beginPath();
@@ -105,7 +109,7 @@ class Radio {
     }
     return [x, y];
   }
-  renderFg(context, radio, lineWidth, padding, x, y) {
+  renderFg(context, radio, lineWidth, padding, x, y, sizeOffset) {
     var self = this;
     var sum = 0;
     self.data.forEach(function(item) {
@@ -136,7 +140,7 @@ class Radio {
       context.font = font;
 
       var w = context.measureText(title).width;
-      context.fillText(title, x - (w >> 1), radio + padding[0] - ((fontSize - lineWidth) >> 1));
+      context.fillText(title, x - (w >> 1), radio + padding[0] - ((fontSize - lineWidth) >> 1) + sizeOffset);
     }
   }
   renderItem(item, i, context, radio, lineWidth, count, sum, x, y) {
@@ -174,12 +178,13 @@ class Radio {
       context.stroke();
       context.closePath();
     }
-    
+
     var deg = startDeg + (endDeg - startDeg) * 0.5;
     if(deg > 270) {
       var xx = x + Math.sin((deg - 270) * Math.PI / 180) * radio;
       var yy = y - Math.cos((deg - 270) * Math.PI / 180) * radio;
       this.points.unshift([xx, yy]);
+
     }
     else if(deg > 180) {
       var xx = x - Math.cos((deg - 180) * Math.PI / 180) * radio;
