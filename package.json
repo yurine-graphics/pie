@@ -32,7 +32,8 @@
     "main": "./index.js",
     "output": [
       "./index.js"
-    ]
+    ],
+    "registry": "http://spm.alipay-inc.com"
   },
   "readmeFilename": "README.md"
 }
