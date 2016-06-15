@@ -77,7 +77,7 @@ class Radio {
     var radio = (min * size - shadowWidth) >> 1;
     var sizeOffset = 0;
     if(size < 1) {
-      sizeOffset = (height - paddingY) * size * 0.5;
+      sizeOffset = (height - paddingY) * (1 - size) * 0.5;
     }
 
     var [x, y] = this.renderBg(context, radio, lineWidth, padding, width, shadowWidth, sizeOffset);
