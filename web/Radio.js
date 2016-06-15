@@ -245,6 +245,10 @@ function getColor(option, i) {
   }
   Radio.prototype.renderTxtItem = function(item, i, context, x, offset, count, discRadio, txtColor, fontSize, lineHeight) {
     var color = getColor(this.option, i);
+    if(Array.isArray(color)) {
+      var arr = color[0].split(/\s+/);
+      color = arr[1];
+    }
     context.fillStyle = color;
     context.beginPath();
     var y = count + ((lineHeight - ((lineHeight - fontSize) >> 1)) >> 1) + (offset >> 1);
