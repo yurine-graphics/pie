@@ -5,7 +5,10 @@ var colors = ['4A90E2', 'C374DE', 'F36342', 'F3A642', '93C93F', '50E3C2'];
 function getColor(option, i) {
   var idx = i % colors.length;
   var color = option.colors[idx] || colors[idx];
-  if(color.charAt(0) != '#' && color.charAt(0) != 'r') {
+  if(Array.isArray(color)) {
+    return color;
+  }
+  if(color.charAt(0) != '#' && color.charAt(0) != 'r' && color.charAt(0) != 't') {
     color = '#' + color;
   }
   return color;
@@ -137,15 +140,37 @@ function getColor(option, i) {
   }
   Radio.prototype.renderItem = function(item, i, context, radio, lineWidth, count, sum, x, y) {
     var color = getColor(this.option, i);
-    context.beginPath();
-    context.strokeStyle = color;
-    context.lineWidth = lineWidth;
     var start = (Math.PI/180)*360*count/sum;
     var num = parseFloat(item[1]);
     var end = start + (Math.PI/180)*360*num/sum;
-    context.arc(x, y, radio, start, end);
-    context.stroke();
-    context.closePath();
+    if(Array.isArray(color)) {
+      var count = 0;
+      color.forEach(function(item) {
+        context.beginPath();
+        var arr = item.split(/\s+/);
+        var per = parseFloat(arr[0]);
+        var cl = arr[1];
+        if(cl.charAt(0) != '#' && cl.charAt(0) != 'r' && cl.charAt(0) != 't') {
+          cl = '#' + cl;
+        }
+        var w = per * lineWidth;
+        var rd = radio - lineWidth * 0.5 + lineWidth * per * 0.5 + count;
+        count += lineWidth * per;
+        context.strokeStyle = cl;
+        context.lineWidth = w + 0.5; //防止白边
+        context.arc(x, y, rd, start, end);
+        context.stroke();
+        context.closePath();
+      });
+    }
+    else {
+      context.beginPath();
+      context.strokeStyle = color;
+      context.lineWidth = lineWidth;
+      context.arc(x, y, radio, start, end);
+      context.stroke();
+      context.closePath();
+    }
   }
   Radio.prototype.renderTxt = function(context, radio, lineWidth, padding, width, height) {
     var lineHeight;var fontSize;var fontWeight;var fontFamily;var fontVariant;var fontStyle;var self = this;

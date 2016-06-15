@@ -29,7 +29,7 @@ npm install yurine-pie
      - height:int 高度，单位px
      - lineWidth:int 圆框粗细，单位px，∈\[1, 可视半径]
      - size:float 饼图占可视比例，∈\[0.2, 1]
-     - colors:\<String> 自定义颜色数组
+     - colors:\<String/\<String>> 自定义颜色数组，如果色值指定为数组形式(\['0.2 #FFF', '0.8 #000'])，则形成彩边
      - discRadio:\<int> 枚举圆点半径，单位px，∈\[1, lineHeight/2]
      - noLabel:Boolean 是否显示标签说明
      - title:String 圆中的文字
