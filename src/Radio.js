@@ -183,23 +183,23 @@ class Radio {
     if(deg > 270) {
       var xx = x + Math.sin((deg - 270) * Math.PI / 180) * radio;
       var yy = y - Math.cos((deg - 270) * Math.PI / 180) * radio;
-      this.points.unshift([xx, yy]);
+      this.points.push([xx, yy]);
 
     }
     else if(deg > 180) {
       var xx = x - Math.cos((deg - 180) * Math.PI / 180) * radio;
       var yy = y - Math.sin((deg - 180) * Math.PI / 180) * radio;
-      this.points.unshift([xx, yy]);
+      this.points.push([xx, yy]);
     }
     else if(deg > 90) {
       var xx = x - Math.sin((deg - 90) * Math.PI / 180) * radio;
       var yy = y + Math.cos((deg - 90) * Math.PI / 180) * radio;
-      this.points.unshift([xx, yy]);
+      this.points.push([xx, yy]);
     }
     else {
       var xx = x + Math.cos((deg) * Math.PI / 180) * radio;
       var yy = y + Math.sin((deg) * Math.PI / 180) * radio;
-      this.points.unshift([xx, yy]);
+      this.points.push([xx, yy]);
     }
   }
   renderTxt(context, radio, lineWidth, padding, width, height) {
