@@ -23,6 +23,7 @@ function getColor(option, i) {
     this.data = data || [];
     this.option = option || {};
     this.option.colors = this.option.colors || [];
+    this.option.offset = this.option.offset || 0;
     this.points = [];
     this.render();
   }
@@ -145,11 +146,9 @@ function getColor(option, i) {
   }
   Radio.prototype.renderItem = function(item, i, context, radio, lineWidth, count, sum, x, y) {
     var color = getColor(this.option, i);
-    var start = (Math.PI/180)*360*count/sum;
+    var start = (360*count/sum + this.option.offset);
     var num = parseFloat(item[1]);
-    var end = start + (Math.PI/180)*360*num/sum;
-    var startDeg = 360*count/sum;
-    var endDeg = 360*num/sum + startDeg;
+    var end = start + (360*num/sum);
     if(Array.isArray(color)) {
       var count = 0;
       color.forEach(function(item) {
@@ -165,7 +164,7 @@ function getColor(option, i) {
         count += lineWidth * per;
         context.strokeStyle = cl;
         context.lineWidth = w + 0.5; //防止白边
-        context.arc(x, y, rd, start, end);
+        context.arc(x, y, rd, start * Math.PI / 180, end * Math.PI / 180);
         context.stroke();
         context.closePath();
       });
@@ -174,12 +173,12 @@ function getColor(option, i) {
       context.beginPath();
       context.strokeStyle = color;
       context.lineWidth = lineWidth;
-      context.arc(x, y, radio, start, end);
+      context.arc(x, y, radio, start * Math.PI / 180, end * Math.PI / 180);
       context.stroke();
       context.closePath();
     }
 
-    var deg = startDeg + (endDeg - startDeg) * 0.5;
+    var deg = start + (end - start) * 0.5;
     if(deg > 270) {
       var xx = x + Math.sin((deg - 270) * Math.PI / 180) * radio;
       var yy = y - Math.cos((deg - 270) * Math.PI / 180) * radio;

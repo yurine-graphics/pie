@@ -38,6 +38,7 @@ npm install yurine-pie
      - shadowWidth:int 背景色宽，单位px，默认lineWidth，∈\[lineWidth, 可视半径]
      - shadowColor:String 背景色
      - points:\<Array\<Number, Number>> 每个饼图的中心坐标
+     - offset:int 角度值偏移增量，因绘图api的0°从右水平线开始，可以此设置开始角位置
 
 # License
 [MIT License]
