@@ -83,10 +83,6 @@ function getColor(option, i) {
 
     (function(){var _1= this.renderBg(context, radio, lineWidth, padding, width, shadowWidth, sizeOffset);x=_1[0];y=_1[1]}).call(this);
     this.renderFg(context, radio, lineWidth, padding, x, y, sizeOffset);
-    if(this.option.noLabel) {
-      return;
-    }
-    this.renderTxt(context, radio, lineWidth, padding, width, height);
   }
   Radio.prototype.renderBg = function(context, radio, lineWidth, padding, width, shadowWidth, sizeOffset) {
     var x = this.option.noLabel ? ((width - padding[1] - padding[3]) >> 1) : padding[3] + radio + (shadowWidth >> 1);
@@ -111,7 +107,7 @@ function getColor(option, i) {
     return [x, y];
   }
   Radio.prototype.renderFg = function(context, radio, lineWidth, padding, x, y, sizeOffset) {
-    var lineHeight;var fontSize;var fontWeight;var fontFamily;var fontVariant;var fontStyle;var self = this;
+    var self = this;
     var sum = 0;
     self.data.forEach(function(item) {
       sum += parseFloat(item[1]);
@@ -121,28 +117,6 @@ function getColor(option, i) {
       self.renderItem.call(self, item, i, context, radio, lineWidth, count, sum, x, y);
       count += parseFloat(item[1]);
     });
-    var title = this.option.title;
-    if(title) {
-      var font = this.option.font || 'normal normal normal 12px/1.5 Arial';
-      (function(){var _2= util.calFont(font);fontStyle=_2["fontStyle"];fontVariant=_2["fontVariant"];fontFamily=_2["fontFamily"];fontWeight=_2["fontWeight"];fontSize=_2["fontSize"];lineHeight=_2["lineHeight"]}).call(this);
-
-      var color = this.option.titleColor || '#000';
-      if(color.charAt(0) != '#' && color.charAt(0) != 'r') {
-        color = '#' + color;
-      }
-      context.fillStyle = color;
-      context.textBaseline = 'top';
-
-      if(this.option.titleSize) {
-        fontSize = parseInt(this.option.titleSize) || 12;
-      }
-
-      font = fontStyle + ' ' + fontVariant + ' ' + fontWeight + ' ' + fontSize + 'px/' + lineHeight + 'px ' + fontFamily;
-      context.font = font;
-
-      var w = context.measureText(title).width;
-      context.fillText(title, x - (w >> 1), radio + padding[0] - ((fontSize - lineWidth) >> 1) + sizeOffset);
-    }
   }
   Radio.prototype.renderItem = function(item, i, context, radio, lineWidth, count, sum, x, y) {
     var color = getColor(this.option, i);
@@ -201,105 +175,10 @@ function getColor(option, i) {
       this.points.push([xx, yy]);
     }
   }
-  Radio.prototype.renderTxt = function(context, radio, lineWidth, padding, width, height) {
-    var lineHeight;var fontSize;var fontWeight;var fontFamily;var fontVariant;var fontStyle;var self = this;
-    var font = this.option.font || 'normal normal normal 12px/1.5 Arial';
-    (function(){var _3= util.calFont(font);fontStyle=_3["fontStyle"];fontVariant=_3["fontVariant"];fontFamily=_3["fontFamily"];fontWeight=_3["fontWeight"];fontSize=_3["fontSize"];lineHeight=_3["lineHeight"]}).call(this);
 
-    var color = this.option.color || '#000';
-    if(color.charAt(0) != '#' && color.charAt(0) != 'r') {
-      color = '#' + color;
-    }
-    context.textBaseline = 'top';
-
-    if(this.option.fontSize) {
-      fontSize = parseInt(this.option.fontSize) || 12;
-    }
-
-    if(this.option.lineHeight) {
-      lineHeight = this.option.lineHeight;
-      if(util.isString(lineHeight)) {
-        if(/[a-z]$/i.test(lineHeight)) {
-          lineHeight = parseInt(lineHeight);
-        }
-        else {
-          lineHeight *= fontSize;
-        }
-      }
-      else {
-        lineHeight *= fontSize;
-      }
-    }
-    else {
-      lineHeight = fontSize * 1.5;
-    }
-    lineHeight = Math.max(lineHeight, fontSize);
-
-    font = fontStyle + ' ' + fontVariant + ' ' + fontWeight + ' ' + fontSize + 'px/' + lineHeight + 'px ' + fontFamily;
-    context.font = font;
-
-    var discRadio = parseInt(this.option.discRadio) || 1;
-    discRadio = Math.max(discRadio, 1);
-    discRadio = Math.min(discRadio, lineHeight >> 1);
-    var x = padding[3] + (radio << 1) + (lineWidth << 1);
-    var maxWidth = width - padding[1] - x - (discRadio << 1) - 30;
-    maxWidth = Math.max(0, maxWidth);
-
-    var maxTextWidth = 0;
-    var totalHeight = 0;
-    var heights = [];
-    self.data.forEach(function(item) {
-      item[0] = item[0] || '';
-      var w = context.measureText(item[0]).width;
-      if(w > maxWidth) {
-        var arr = util.calHeight(context, item[0], maxWidth, w);
-        item[0] = arr;
-        totalHeight += heights.push(arr.length * lineHeight);
-        maxTextWidth = maxWidth;
-      }
-      else {
-        totalHeight += heights.push(lineHeight);
-        maxTextWidth = Math.max(w, maxTextWidth);
-      }
-    });
-
-    x += (maxWidth - maxTextWidth) >> 1;
-    var offset = (height - totalHeight) >> 1;
-
-    var count = padding[0];
-    self.data.forEach(function(item, i) {
-      self.renderTxtItem(item, i, context, x, offset, count, discRadio, color, fontSize, lineHeight, maxWidth);
-      count += heights[i];
-    });
-  }
-  Radio.prototype.renderTxtItem = function(item, i, context, x, offset, count, discRadio, txtColor, fontSize, lineHeight) {
-    var color = getColor(this.option, i);
-    if(Array.isArray(color)) {
-      var arr = color[0].split(/\s+/);
-      color = arr[1];
-    }
-    context.fillStyle = color;
-    context.beginPath();
-    var y = count + ((lineHeight - ((lineHeight - fontSize) >> 1)) >> 1) + (offset >> 1);
-    context.arc(x + 10, y, discRadio, 0, (Math.PI/180)*360);
-    context.fill();
-    context.closePath();
-
-    context.fillStyle = txtColor;
-    var txt = item[0] || i;
-    if(Array.isArray(txt)) {
-      txt.forEach(function(t, j) {
-        context.fillText(t, x + 30, count + (offset >> 1) + j * lineHeight);
-      });
-    }
-    else {
-      context.fillText(txt, x + 30, count + (offset >> 1));
-    }
-  }
-
-  var _4={};_4.COLORS={};_4.COLORS.get =function() {
+  var _2={};_2.COLORS={};_2.COLORS.get =function() {
     return colors;
   }
-Object.keys(_4).forEach(function(k){Object.defineProperty(Radio,k,_4[k])});
+Object.keys(_2).forEach(function(k){Object.defineProperty(Radio,k,_2[k])});
 
 exports["default"]=Radio;
