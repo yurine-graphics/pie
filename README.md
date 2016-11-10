@@ -14,7 +14,7 @@ npm install yurine-pie
 # API
  * Radio(selector:DOM/String, data:Array\<\<String>, \<int>>, option:Object):Class
    * selector:String 渲染的canvas对象或选择器
-   * data:\<\<String>, \<int>> 渲染数据数组，以\[名称, 数字]格式
+   * data:\<Number> 渲染数据数组
    * option:Object 选项
      - padding:int/Array 边距，上右下左，单位px
      - width:int 宽度，单位px

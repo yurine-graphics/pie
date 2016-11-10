@@ -82,10 +82,10 @@ class Radio {
     }
 
     var [x, y] = this.renderBg(context, radio, lineWidth, padding, width, shadowWidth, sizeOffset);
-    this.renderFg(context, radio, lineWidth, padding, x, y, sizeOffset);
+    this.renderFg(context, radio, lineWidth, x, y);
   }
   renderBg(context, radio, lineWidth, padding, width, shadowWidth, sizeOffset) {
-    var x = this.option.noLabel ? ((width - padding[1] - padding[3]) >> 1) : padding[3] + radio + (shadowWidth >> 1);
+    var x = (width - padding[1] - padding[3]) >> 1;
     var y = padding[0] + radio + (shadowWidth >> 1) + sizeOffset;
     var shadowColor = this.option.shadowColor || 'rgba(0,0,0,0.1)';
     if(shadowWidth && shadowWidth > lineWidth) {
@@ -106,22 +106,22 @@ class Radio {
     }
     return [x, y];
   }
-  renderFg(context, radio, lineWidth, padding, x, y, sizeOffset) {
+  renderFg(context, radio, lineWidth, x, y) {
     var self = this;
     var sum = 0;
     self.data.forEach(function(item) {
-      sum += parseFloat(item[1]);
+      sum += parseFloat(item);
     });
     var count = 0;
     self.data.forEach(function(item, i) {
-      self.renderItem.call(self, item, i, context, radio, lineWidth, count, sum, x, y);
-      count += parseFloat(item[1]);
-    });
+      self.renderItem(item, i, context, radio, lineWidth, count, sum, x, y);
+      count += parseFloat(item);
+    });console.log(count);
   }
   renderItem(item, i, context, radio, lineWidth, count, sum, x, y) {
     var color = getColor(this.option, i);
     var start = (360*count/sum + this.option.offset);
-    var num = parseFloat(item[1]);
+    var num = parseFloat(item);
     var end = start + (360*num/sum);
     if(Array.isArray(color)) {
       var count = 0;

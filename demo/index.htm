@@ -61,25 +61,12 @@
       data = JSON.parse(decodeURIComponent(search));
     }
     if(!data.length) {
-      data = [
-        ['默认a', 72],
-        ['默认b', 53],
-        ['默认c', 26],
-        ['默认d', 39]
-      ];
-    }
-    for(var i = 0; i < data.length; i++) {
-      var item = data[i];
-      if(!item[0] || !item[1]) {
-        data.splice(i, 1);
-        i--;
-      }
+      data = [72,53,26,39];
     }
     var s = '';
     data.forEach(function(item) {
       s += '<li>\
-        <input type="text" value="' + item[0] + '" placeholder="名称"/>\
-        <input type="number" value="' + item[1] + '" placeholder="数字"/>\
+        <input type="number" value="' + item + '" placeholder="数字"/>\
         <button>删除</button>\
         </li>';
     });
