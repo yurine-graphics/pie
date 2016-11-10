@@ -116,7 +116,7 @@ class Radio {
     self.data.forEach(function(item, i) {
       self.renderItem(item, i, context, radio, lineWidth, count, sum, x, y);
       count += parseFloat(item);
-    });console.log(count);
+    });
   }
   renderItem(item, i, context, radio, lineWidth, count, sum, x, y) {
     var color = getColor(this.option, i);

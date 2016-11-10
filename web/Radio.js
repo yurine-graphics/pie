@@ -116,7 +116,7 @@ function getColor(option, i) {
     self.data.forEach(function(item, i) {
       self.renderItem(item, i, context, radio, lineWidth, count, sum, x, y);
       count += parseFloat(item);
-    });console.log(count);
+    });
   }
   Radio.prototype.renderItem = function(item, i, context, radio, lineWidth, count, sum, x, y) {
     var color = getColor(this.option, i);
