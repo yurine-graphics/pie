@@ -85,7 +85,7 @@ function getColor(option, i) {
     this.renderFg(context, radio, lineWidth, x, y);
   }
   Radio.prototype.renderBg = function(context, radio, lineWidth, padding, width, shadowWidth, sizeOffset) {
-    var x = (width - padding[1] - padding[3]) >> 1;
+    var x = ((width - padding[1] - padding[3]) >> 1) + padding[3];
     var y = padding[0] + radio + (shadowWidth >> 1) + sizeOffset;
     var shadowColor = this.option.shadowColor || 'rgba(0,0,0,0.1)';
     if(shadowWidth && shadowWidth > lineWidth) {
