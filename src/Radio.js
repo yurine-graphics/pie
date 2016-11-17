@@ -32,6 +32,7 @@ class Radio {
     var context = this.dom.getContext('2d');
     var width = this.option.width || this.dom.getAttribute('width') || parseInt(window.getComputedStyle(this.dom, null).getPropertyValue('width')) || 300;
     var height = this.option.height || this.dom.getAttribute('height') || parseInt(window.getComputedStyle(this.dom, null).getPropertyValue('height')) || 150;
+    context.clearRect(0, 0, width, height);
     var padding = this.option.padding === undefined ? [10, 10, 10, 10] : this.option.padding;
     if(Array.isArray(padding)) {
       switch(padding.length) {
