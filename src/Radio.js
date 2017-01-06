@@ -100,6 +100,7 @@ class Radio {
       var count = 1;
       var offset = self.option.offset;
       var data = context.getImageData(0, 0, width, height);
+      context.clearRect(0, 0, width, height);
       function draw() {
         context.clearRect(0, 0, width, height);
         context.globalCompositeOperation="source-over";
@@ -116,7 +117,7 @@ class Radio {
           requestAnimationFrame(draw);
         }
       }
-      draw();
+      requestAnimationFrame(draw);
     }
   }
   renderBg(context, radio, lineWidth, padding, width, shadowWidth, sizeOffset) {

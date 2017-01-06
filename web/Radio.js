@@ -100,6 +100,7 @@ function getColor(option, i) {
       count = 1;
       offset = self.option.offset;
       data = context.getImageData(0, 0, width, height);
+      context.clearRect(0, 0, width, height);
       function draw() {
         context.clearRect(0, 0, width, height);
         context.globalCompositeOperation="source-over";
@@ -116,7 +117,7 @@ function getColor(option, i) {
           requestAnimationFrame(draw);
         }
       }
-      draw();}();
+      requestAnimationFrame(draw);}.call(this);
     }
   }
   Radio.prototype.renderBg = function(context, radio, lineWidth, padding, width, shadowWidth, sizeOffset) {
@@ -213,7 +214,7 @@ function getColor(option, i) {
 
   var _2={};_2.COLORS={};_2.COLORS.get =function() {
     return colors;
-  }
+  };
 Object.keys(_2).forEach(function(k){Object.defineProperty(Radio,k,_2[k])});
 
 exports["default"]=Radio;
