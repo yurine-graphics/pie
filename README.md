@@ -26,6 +26,8 @@ npm install yurine-pie
      - shadowColor:String 背景色
      - offset:int 角度值偏移增量，因绘图api的0°从右水平线开始，可以此设置开始角位置
      - points:\<Array\<Number, Number>> 只读，获取每个饼图的中心坐标
+     - animation:Boolean 饼图是否以顺时针动画效果出现
+     - speed:int 饼图动画速度，每帧显示角度数，默认1，越大越快
 
 # License
 [MIT License]

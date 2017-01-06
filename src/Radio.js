@@ -1,5 +1,14 @@
 import util from './util';
 
+window.requestAnimFrame = function() {
+  return window.requestAnimationFrame
+    || window.webkitRequestAnimationFrame
+    || window.mozRequestAnimationFrame
+    || function(callback) {
+      window.setTimeout(callback, 1000 / 60);
+    };
+}();
+
 var colors = ['4A90E2', 'C374DE', 'F36342', 'F3A642', '93C93F', '50E3C2'];
 
 function getColor(option, i) {
@@ -29,11 +38,12 @@ class Radio {
   }
 
   render() {
-    var context = this.dom.getContext('2d');
-    var width = this.option.width || this.dom.getAttribute('width') || parseInt(window.getComputedStyle(this.dom, null).getPropertyValue('width')) || 300;
-    var height = this.option.height || this.dom.getAttribute('height') || parseInt(window.getComputedStyle(this.dom, null).getPropertyValue('height')) || 150;
+    var self = this;
+    var context = self.dom.getContext('2d');
+    var width = self.option.width || self.dom.getAttribute('width') || parseInt(window.getComputedStyle(self.dom, null).getPropertyValue('width')) || 300;
+    var height = self.option.height || self.dom.getAttribute('height') || parseInt(window.getComputedStyle(self.dom, null).getPropertyValue('height')) || 150;
     context.clearRect(0, 0, width, height);
-    var padding = this.option.padding === undefined ? [10, 10, 10, 10] : this.option.padding;
+    var padding = self.option.padding === undefined ? [10, 10, 10, 10] : self.option.padding;
     if(Array.isArray(padding)) {
       switch(padding.length) {
         case 0:
@@ -57,17 +67,17 @@ class Radio {
     var paddingX = padding[1] + padding[3];
     var paddingY = padding[0] + padding[2];
     var min = Math.min(width - paddingX, height - paddingY);
-    var lineWidth = this.option.lineWidth || 20;
+    var lineWidth = self.option.lineWidth || 20;
     lineWidth = Math.max(lineWidth, 1);
     lineWidth = Math.min(lineWidth, min >> 1);
-    var shadowWidth = this.option.shadowWidth || lineWidth;
+    var shadowWidth = self.option.shadowWidth || lineWidth;
     shadowWidth = Math.max(lineWidth, shadowWidth);
     shadowWidth = Math.min(shadowWidth, min >> 1);
     if(shadowWidth > lineWidth && shadowWidth == min >> 1) {
       var diff = shadowWidth - lineWidth;
       lineWidth -= diff / 2;
     }
-    var size = String(this.option.size || 1);
+    var size = String(self.option.size || 1);
     if(/%$/.test(size)) {
       size = parseFloat(size) * 0.01;
     }
@@ -82,8 +92,32 @@ class Radio {
       sizeOffset = (height - paddingY) * (1 - size) * 0.5;
     }
 
-    var [x, y] = this.renderBg(context, radio, lineWidth, padding, width, shadowWidth, sizeOffset);
-    this.renderFg(context, radio, lineWidth, x, y);
+    var [x, y] = self.renderBg(context, radio, lineWidth, padding, width, shadowWidth, sizeOffset);
+    self.renderFg(context, radio, lineWidth, x, y);
+    
+    if(self.option.animation) {
+      var speed = parseInt(self.option.speed) || 1;
+      var count = 1;
+      var offset = self.option.offset;
+      var data = context.getImageData(0, 0, width, height);
+      function draw() {
+        context.clearRect(0, 0, width, height);
+        context.globalCompositeOperation="source-over";
+        context.putImageData(data, 0, 0);
+        context.globalCompositeOperation="destination-in";
+        var start = offset;
+        var end = Math.min(360, count) + offset;
+        context.beginPath();
+        context.arc(x, y, radio, start * Math.PI / 180, end * Math.PI / 180);
+        context.stroke();
+        context.closePath();
+        if(count < 360) {
+          count += speed;
+          requestAnimationFrame(draw);
+        }
+      }
+      draw();
+    }
   }
   renderBg(context, radio, lineWidth, padding, width, shadowWidth, sizeOffset) {
     var x = ((width - padding[1] - padding[3]) >> 1) + padding[3];
