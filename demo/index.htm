@@ -61,7 +61,7 @@
       data = JSON.parse(decodeURIComponent(search));
     }
     if(!data.length) {
-      data = [72,53,26,39];
+      data = [72,53,null,0,0];
     }
     var s = '';
     data.forEach(function(item) {
@@ -107,15 +107,14 @@
         </li>';
     });
     var r = new Radio('#canvas', data, {
-//      width: 600,
-//      height: 300,
       lineWidth: 30,
       colors: [
         ['0.2 #EE8342', '0.6 #F68B49', '0.2 #FBC9A9']
       ],
       offset: -90,
       animation: true,
-      speed: 1
+      speed: 20,
+      ease: 'out'
     });
     console.log(r.points);
   });

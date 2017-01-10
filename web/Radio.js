@@ -38,7 +38,7 @@ function getColor(option, i) {
   }
 
   Radio.prototype.render = function() {
-    var data;var offset;var count;var speed;var y;var x;var self = this;
+    var data;var offset;var ease;var count;var speed;var y;var x;var self = this;
     var context = self.dom.getContext('2d');
     var width = self.option.width || self.dom.getAttribute('width') || parseInt(window.getComputedStyle(self.dom, null).getPropertyValue('width')) || 300;
     var height = self.option.height || self.dom.getAttribute('height') || parseInt(window.getComputedStyle(self.dom, null).getPropertyValue('height')) || 150;
@@ -97,15 +97,17 @@ function getColor(option, i) {
     
     if(self.option.animation) {!function(){
       speed = parseInt(self.option.speed) || 1;
+      speed = Math.max(speed, 1);
       count = 1;
+      ease = self.option.ease;
       offset = self.option.offset;
       data = context.getImageData(0, 0, width, height);
       context.clearRect(0, 0, width, height);
       function draw() {
         context.clearRect(0, 0, width, height);
-        context.globalCompositeOperation="source-over";
+        context.globalCompositeOperation = "source-over";
         context.putImageData(data, 0, 0);
-        context.globalCompositeOperation="destination-in";
+        context.globalCompositeOperation = "destination-in";
         var start = offset;
         var end = Math.min(360, count) + offset;
         context.beginPath();
@@ -114,6 +116,14 @@ function getColor(option, i) {
         context.closePath();
         if(count < 360) {
           count += speed;
+          if(ease == 'in') {
+            speed += speed * 0.05;
+            speed = Math.max(speed, 1);
+          }
+          else if(ease == 'out') {
+            speed -= speed * 0.05;
+            speed = Math.max(speed, 1);
+          }
           requestAnimationFrame(draw);
         }
       }
@@ -123,7 +133,7 @@ function getColor(option, i) {
   Radio.prototype.renderBg = function(context, radio, lineWidth, padding, width, shadowWidth, sizeOffset) {
     var x = ((width - padding[1] - padding[3]) >> 1) + padding[3];
     var y = padding[0] + radio + (shadowWidth >> 1) + sizeOffset;
-    var shadowColor = this.option.shadowColor || 'rgba(0,0,0,0.1)';
+    var shadowColor = this.option.shadowColor || '#EEE';
     if(shadowWidth && shadowWidth > lineWidth) {
       context.beginPath();
       context.strokeStyle = shadowColor;
@@ -146,8 +156,11 @@ function getColor(option, i) {
     var self = this;
     var sum = 0;
     self.data.forEach(function(item) {
-      sum += parseFloat(item);
+      sum += Math.max(parseFloat(item) || 0, 0);
     });
+    if(isNaN(sum) || sum <= 0) {
+      return;
+    }
     var count = 0;
     self.data.forEach(function(item, i) {
       self.renderItem(item, i, context, radio, lineWidth, count, sum, x, y);
@@ -157,7 +170,10 @@ function getColor(option, i) {
   Radio.prototype.renderItem = function(item, i, context, radio, lineWidth, count, sum, x, y) {
     var color = getColor(this.option, i);
     var start = (360*count/sum + this.option.offset);
-    var num = parseFloat(item);
+    var num = Math.max(parseFloat(item) || 0, 0);
+    if(num == 0) {
+      return;
+    }
     var end = start + (360*num/sum);
     if(Array.isArray(color)) {
       var count = 0;

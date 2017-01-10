@@ -28,6 +28,7 @@ npm install yurine-pie
      - points:\<Array\<Number, Number>> 只读，获取每个饼图的中心坐标
      - animation:Boolean 饼图是否以顺时针动画效果出现
      - speed:int 饼图动画速度，每帧显示角度数，默认1，越大越快
+     - ease:String 饼图动画加速/减速，in/out
 
 # License
 [MIT License]
