@@ -1,6 +1,6 @@
 import util from './util';
 
-window.requestAnimFrame = function() {
+window.requestAnimationFrame = function() {
   return window.requestAnimationFrame
     || window.webkitRequestAnimationFrame
     || window.mozRequestAnimationFrame
@@ -35,13 +35,17 @@ class Radio {
     this.option.offset = this.option.offset || 0;
     this.points = [];
     this.render();
+    this.destroy = false;
+    this.context = this.dom.getContext('2d');
+    this.width = this.option.width || this.dom.getAttribute('width') || parseInt(window.getComputedStyle(this.dom, null).getPropertyValue('width')) || 300;
+    this.height = this.option.height || this.dom.getAttribute('height') || parseInt(window.getComputedStyle(this.dom, null).getPropertyValue('height')) || 150;
   }
 
   render() {
     var self = this;
-    var context = self.dom.getContext('2d');
-    var width = self.option.width || self.dom.getAttribute('width') || parseInt(window.getComputedStyle(self.dom, null).getPropertyValue('width')) || 300;
-    var height = self.option.height || self.dom.getAttribute('height') || parseInt(window.getComputedStyle(self.dom, null).getPropertyValue('height')) || 150;
+    var context = self.context;
+    var width = self.width;
+    var height = self.height;
     context.clearRect(0, 0, width, height);
     var padding = self.option.padding === undefined ? [10, 10, 10, 10] : self.option.padding;
     if(Array.isArray(padding)) {
@@ -104,6 +108,9 @@ class Radio {
       var data = context.getImageData(0, 0, width, height);
       context.clearRect(0, 0, width, height);
       function draw() {
+        if(self.destroy) {
+          return;
+        }
         context.clearRect(0, 0, width, height);
         context.globalCompositeOperation = "source-over";
         context.putImageData(data, 0, 0);
@@ -114,7 +121,7 @@ class Radio {
         context.arc(x, y, radio, start * Math.PI / 180, end * Math.PI / 180);
         context.stroke();
         context.closePath();
-        if(count < 360) {
+        if(count < 360 && !self.destroy) {
           count += speed;
           if(ease == 'in') {
             speed += speed * 0.05;
@@ -226,6 +233,10 @@ class Radio {
       var yy = y + Math.sin((deg) * Math.PI / 180) * radio;
       this.points.push([xx, yy]);
     }
+  }
+  clear() {
+    this.destroy = true;
+    this.context.clearRect(0, 0, this.width, this.height);
   }
 
   static get COLORS() {
