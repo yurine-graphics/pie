@@ -34,11 +34,11 @@ function getColor(option, i) {
     this.option.colors = this.option.colors || [];
     this.option.offset = this.option.offset || 0;
     this.points = [];
-    this.render();
     this.destroy = false;
     this.context = this.dom.getContext('2d');
     this.width = this.option.width || this.dom.getAttribute('width') || parseInt(window.getComputedStyle(this.dom, null).getPropertyValue('width')) || 300;
     this.height = this.option.height || this.dom.getAttribute('height') || parseInt(window.getComputedStyle(this.dom, null).getPropertyValue('height')) || 150;
+    this.render();
   }
 
   Radio.prototype.render = function() {
