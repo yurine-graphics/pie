@@ -47,6 +47,7 @@ class Radio {
     var width = self.width;
     var height = self.height;
     context.clearRect(0, 0, width, height);
+    context.globalCompositeOperation = "source-over";
     var padding = self.option.padding === undefined ? [10, 10, 10, 10] : self.option.padding;
     if(Array.isArray(padding)) {
       switch(padding.length) {
