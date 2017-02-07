@@ -29,7 +29,9 @@ npm install yurine-pie
      - animation:Boolean 饼图是否以顺时针动画效果出现
      - speed:int 饼图动画速度，每帧显示角度数，默认1，越大越快
      - ease:String 饼图动画加速/减速，in/out
+     - animationDegree:int 动画初始角度
  * clear():void 清除画布和动画
+ * animationDegree:int get/set当前动画角度值
 
 # License
 [MIT License]

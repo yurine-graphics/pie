@@ -40,6 +40,7 @@ class Radio {
     this.context = this.dom.getContext('2d');
     this.width = this.option.width || this.dom.getAttribute('width') || parseInt(window.getComputedStyle(this.dom, null).getPropertyValue('width')) || 300;
     this.height = this.option.height || this.dom.getAttribute('height') || parseInt(window.getComputedStyle(this.dom, null).getPropertyValue('height')) || 150;
+    this.animationDegree = this.option.animationDegree || 1;
     this.render();
   }
 
@@ -105,7 +106,6 @@ class Radio {
     if(self.option.animation) {
       var speed = parseInt(self.option.speed) || 1;
       speed = Math.max(speed, 1);
-      var count = 1;
       var ease = self.option.ease;
       var offset = self.option.offset;
       var data = context.getImageData(0, 0, width, height);
@@ -119,13 +119,14 @@ class Radio {
         context.putImageData(data, 0, 0);
         context.globalCompositeOperation = "destination-in";
         var start = offset;
-        var end = Math.min(360, count) + offset;
+        var end = Math.min(360, self.animationDegree) + offset;
         context.beginPath();
         context.arc(x, y, radio, start * Math.PI / 180, end * Math.PI / 180);
         context.stroke();
         context.closePath();
-        if(count < 360 && !self.destroy) {
-          count += speed;
+        if(self.animationDegree < 360 && !self.destroy) {
+          self.animationDegree += speed;
+          self.animationDegree = Math.min(self.animationDegree, 360);
           if(ease == 'in') {
             speed += speed * 0.05;
             speed = Math.max(speed, 1);
@@ -240,6 +241,12 @@ class Radio {
   clear() {
     this.destroy = true;
     this.context.clearRect(0, 0, this.width, this.height);
+  }
+  get animationDegree() {
+    return this._animationDegree;
+  }
+  set animationDegree(v) {
+    this._animationDegree = v;
   }
 
   static get COLORS() {
