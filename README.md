@@ -32,6 +32,7 @@ npm install yurine-pie
      - animationDegree:int 动画初始角度
  * clear():void 清除画布和动画
  * animationDegree:int get/set当前动画角度值
+ * speed:int get/set当前动画速度值
 
 # License
 [MIT License]

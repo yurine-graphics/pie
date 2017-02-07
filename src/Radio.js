@@ -40,7 +40,8 @@ class Radio {
     this.context = this.dom.getContext('2d');
     this.width = this.option.width || this.dom.getAttribute('width') || parseInt(window.getComputedStyle(this.dom, null).getPropertyValue('width')) || 300;
     this.height = this.option.height || this.dom.getAttribute('height') || parseInt(window.getComputedStyle(this.dom, null).getPropertyValue('height')) || 150;
-    this.animationDegree = this.option.animationDegree || 1;
+    this.animationDegree = this.option.animationDegree || 0;
+    this.speed = parseInt(this.option.speed) || 1;
     this.render();
   }
 
@@ -104,8 +105,7 @@ class Radio {
     self.renderFg(context, radio, lineWidth, x, y);
     
     if(self.option.animation) {
-      var speed = parseInt(self.option.speed) || 1;
-      speed = Math.max(speed, 1);
+      self.speed = Math.max(self.speed, 1);
       var ease = self.option.ease;
       var offset = self.option.offset;
       var data = context.getImageData(0, 0, width, height);
@@ -125,19 +125,20 @@ class Radio {
         context.stroke();
         context.closePath();
         if(self.animationDegree < 360 && !self.destroy) {
-          self.animationDegree += speed;
+          self.animationDegree += self.speed;
           self.animationDegree = Math.min(self.animationDegree, 360);
           if(ease == 'in') {
-            speed += speed * 0.05;
-            speed = Math.max(speed, 1);
+            self.speed += self.speed * 0.05;
+            self.speed = Math.max(self.speed, 1);
           }
           else if(ease == 'out') {
-            speed -= speed * 0.05;
-            speed = Math.max(speed, 1);
+            self.speed -= self.speed * 0.05;
+            self.speed = Math.max(self.speed, 1);
           }
           requestAnimationFrame(draw);
         }
       }
+      draw();
       requestAnimationFrame(draw);
     }
   }
@@ -247,6 +248,12 @@ class Radio {
   }
   set animationDegree(v) {
     this._animationDegree = v;
+  }
+  get speed() {
+    return this._speed;
+  }
+  set speed(v) {
+    this._speed = v;
   }
 
   static get COLORS() {
