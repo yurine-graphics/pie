@@ -134,12 +134,11 @@ class Radio {
           self.animationDegree = Math.min(self.animationDegree, 360);
           if(ease == 'in') {
             self.speed += self.speed * 0.05;
-            self.speed = Math.max(self.speed, 1);
           }
           else if(ease == 'out') {
             self.speed -= self.speed * 0.05;
-            self.speed = Math.max(self.speed, 1);
           }
+          self.speed = Math.max(self.speed, 1);
           requestAnimationFrame(draw);
         }
         // destination-out方式时结束需全部绘制
@@ -147,6 +146,18 @@ class Radio {
           context.clearRect(0, 0, width, height);
           context.globalCompositeOperation = "source-over";
           context.putImageData(data, 0, 0);
+          // 老webkit最后绘制会出现裂缝，多加一个尾帧画个透明层上去触发重绘
+          requestAnimationFrame(function() {
+            if(self.destroy) {
+              return;
+            }
+            context.globalAlpha = 0;
+            context.beginPath();
+            context.arc(x, y, radio, 0, 360 * Math.PI / 180);
+            context.stroke();
+            context.closePath();
+            context.globalAlpha = 1;
+          });
         }
       }
       draw();
