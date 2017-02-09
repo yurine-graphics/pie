@@ -146,6 +146,7 @@ function getColor(option, i) {
           context.clearRect(0, 0, width, height);
           context.globalCompositeOperation = "source-over";
           context.putImageData(data, 0, 0);
+          // 老webkit最后绘制会出现裂缝，多加一个尾帧画个透明层上去触发重绘
           requestAnimationFrame(function() {
             if(self.destroy) {
               return;
