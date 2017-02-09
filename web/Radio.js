@@ -110,20 +110,25 @@ function getColor(option, i) {
       offset = self.option.offset;
       data = context.getImageData(0, 0, width, height);
       context.clearRect(0, 0, width, height);
+      // destination-in方式老webkit有兼容问题失效，用destination-out方式替代，宽度需要多2px才能盖住很神奇
+      context.lineWidth += 2;
       function draw() {
         if(self.destroy) {
           return;
         }
         context.clearRect(0, 0, width, height);
-        context.globalCompositeOperation = "source-over";
-        context.putImageData(data, 0, 0);
-        context.globalCompositeOperation = "destination-in";
         var start = offset;
         var end = Math.min(360, self.animationDegree) + offset;
-        context.beginPath();
-        context.arc(x, y, radio, start * Math.PI / 180, end * Math.PI / 180);
-        context.stroke();
-        context.closePath();
+        // destination-out方式时，当角度相同，理应图形全空，可是却无效，所以应该不绘制
+        if(start != end) {
+          context.globalCompositeOperation = "source-over";
+          context.putImageData(data, 0, 0);
+          context.globalCompositeOperation = "destination-out";
+          context.beginPath();
+          context.arc(x, y, radio, start * Math.PI / 180, end * Math.PI / 180, true);
+          context.stroke();
+          context.closePath();
+        }
         if(self.animationDegree < 360 && !self.destroy) {
           self.animationDegree += self.speed;
           self.animationDegree = Math.min(self.animationDegree, 360);
@@ -137,9 +142,14 @@ function getColor(option, i) {
           }
           requestAnimationFrame(draw);
         }
+        // destination-out方式时结束需全部绘制
+        else {
+          context.clearRect(0, 0, width, height);
+          context.globalCompositeOperation = "source-over";
+          context.putImageData(data, 0, 0);
+        }
       }
-      draw();
-      requestAnimationFrame(draw);}.call(this);
+      draw();}.call(this);
     }
   }
   Radio.prototype.renderBg = function(context, radio, lineWidth, padding, width, shadowWidth, sizeOffset) {
