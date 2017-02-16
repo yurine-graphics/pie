@@ -1,6 +1,6 @@
 {
   "name": "yurine-pie",
-  "version": "0.13.2",
+  "version": "0.13.3",
   "description": "饼图",
   "maintainers": [
     {
@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/yurine-pie/pie.git"
+    "url": "git://github.com/yurine-graphics/pie.git"
   },
   "keywords": [
     "pie"

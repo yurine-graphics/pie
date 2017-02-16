@@ -12,7 +12,7 @@ npm install yurine-pie
 [![preview](https://raw.githubusercontent.com/yurine-graphics/pie/master/preview.png)](https://github.com/yurine-graphics/pie)
 
 # API
- * Radio(selector:DOM/String, data:Array\<\<String>, \<int>>, option:Object):Class
+ * Pie(selector:DOM/String, data:Array\<\<String>, \<int>>, option:Object):Class
    * selector:String 渲染的canvas对象或选择器
    * data:\<Number> 渲染数据数组
    * option:Object 选项
